@@ -4,7 +4,7 @@ Docker Compose prototype for an autonomous coding pipeline:
 
 - `Kanboard` as the task tracker
 - `Gitea` for git hosting and PR visibility
-- `Woodpecker` for CI/CD
+- `Gitea Actions` for CI/CD
 - `orchestrator` as the pipeline state machine
 - `control-room` as the unified operator dashboard
 - `pet-app` as the target application agents improve
@@ -23,8 +23,8 @@ This repository starts with a working scaffold:
 - seedable demo data for the pet app and control room
 
 The first implementation milestone focuses on local reproducibility and
-observability. External integrations with Kanboard, Gitea, and Woodpecker are
-introduced progressively rather than hidden behind a large opaque bootstrap.
+observability. External integrations with Kanboard and Gitea are introduced
+progressively rather than hidden behind a large opaque bootstrap.
 
 ## Current Milestones Implemented
 
@@ -32,7 +32,7 @@ introduced progressively rather than hidden behind a large opaque bootstrap.
 - FastAPI services for `pet-app`, `control-room`, and `orchestrator`
 - shared SQLite-backed demo task store with seeded backlog and done tasks
 - Kanboard seed script that creates the project, user, columns, and cards
-- minimal `Woodpecker` pipeline for running `pytest`
+- minimal `Gitea Actions` workflow for running `pytest`
 
 ## Development
 
@@ -51,7 +51,7 @@ docker compose up --build
 - `orchestrator`: task lifecycle engine
 - `kanboard`: task board and user-facing intake
 - `gitea`: repository hosting and PR UI
-- `woodpecker-server` / `woodpecker-agent`: CI/CD pipeline execution
+- `gitea-actions-runner`: executes Gitea Actions jobs in Docker
 
 ## Port Map
 
@@ -61,16 +61,15 @@ docker compose up --build
 - `18080` -> `kanboard:80`
 - `13000` -> `gitea:3000`
 - `12222` -> `gitea:22`
-- `19000` -> `woodpecker-server:8000`
 
 ## Routing
 
 - human task intake starts in `Kanboard`
 - the demo services share state through `data/demo.db`
-- `control-room` links out to `Kanboard`, `Gitea`, `Woodpecker`, and the live `pet-app`
+- `control-room` links out to `Kanboard`, `Gitea`, `Gitea Actions`, and the live `pet-app`
 - `kanboard-seed` uses JSON-RPC against `http://kanboard/jsonrpc.php`
-- `woodpecker-agent` talks to `woodpecker-server:9000` over the internal Docker network
-- browser-facing `Woodpecker` OAuth uses `localhost:13000` for `Gitea`
+- `gitea-actions-runner` registers itself with the static instance token exposed by `Gitea`
+- the runner and action job containers reach the local forge through `http://host.docker.internal:13000`
 
 ## Safety
 

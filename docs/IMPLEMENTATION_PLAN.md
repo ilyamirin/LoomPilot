@@ -78,13 +78,13 @@ Definition of Done:
 Scope:
 
 - prepare Gitea configuration for local use
-- add Woodpecker configuration placeholders and pipeline definitions
+- add Gitea Actions runner configuration and workflow definitions
 - connect orchestrator events to repository workflow artifacts
 
 Definition of Done:
 
 - Gitea is reachable in Compose
-- Woodpecker services are defined and documented
+- Gitea Actions runner is defined and documented
 - repository workflow file exists for CI/CD demo
 - control room can render links for repo and pipeline artifacts
 - no secrets are present in version control
