@@ -138,7 +138,7 @@
     <header>
       <div>
         <h1>Control Room</h1>
-        <p>One screen that ties together intake, agent execution, CI/CD, and the live app.</p>
+        <p>One screen that ties together Kanboard intake, agent execution, CI/CD, and the live app.</p>
       </div>
       <div class="links">
         <a href="http://localhost:18000" target="_blank" rel="noreferrer">Pet App</a> ·
@@ -160,7 +160,7 @@
       <section class="grid layout">
         <article class="panel">
           <h2>Pipeline Tasks</h2>
-          <p>Backlog items can be promoted to <strong>Ready</strong>. The local orchestrator then advances them through the demo pipeline.</p>
+          <p>Move a Kanboard card to <strong>Ready</strong>. The orchestrator mirrors it locally and advances it through the pipeline.</p>
           <table>
             <thead>
               <tr>
@@ -170,7 +170,7 @@
                 <th>Area</th>
                 <th>Risk</th>
                 <th>Artifacts</th>
-                <th>Action</th>
+                <th>Kanboard</th>
               </tr>
             </thead>
             <tbody>
@@ -207,15 +207,7 @@
                       <div><small style="color: var(--bad)">{{ task.last_error }}</small></div>
                     {% endif %}
                   </td>
-                  <td>
-                    {% if task.status == "backlog" %}
-                      <form method="post" action="/tasks/{{ task.id }}/ready">
-                        <button class="ready-button" type="submit">Send to Ready</button>
-                      </form>
-                    {% else %}
-                      <small>{{ task.updated_at }}</small>
-                    {% endif %}
-                  </td>
+                  <td><small>Move card in Kanboard</small><br><small>{{ task.updated_at }}</small></td>
                 </tr>
               {% endfor %}
             </tbody>

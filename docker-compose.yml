@@ -40,12 +40,20 @@ services:
       GITEA_HTTP_BASE_URL: ${GITEA_HTTP_BASE_URL:-http://localhost:13000}
       CI_POLL_TIMEOUT_SECONDS: ${CI_POLL_TIMEOUT_SECONDS:-180}
       CI_POLL_INTERVAL_SECONDS: ${CI_POLL_INTERVAL_SECONDS:-5}
+      KANBOARD_SYNC_ENABLED: ${KANBOARD_SYNC_ENABLED:-true}
+      KANBOARD_URL: ${KANBOARD_URL:-http://kanboard/jsonrpc.php}
+      KANBOARD_PROJECT_NAME: ${KANBOARD_PROJECT_NAME}
+      KANBOARD_ADMIN_USERNAME: ${KANBOARD_ADMIN_USERNAME}
+      KANBOARD_ADMIN_PASSWORD: ${KANBOARD_ADMIN_PASSWORD}
+      KANBOARD_API_USERNAME: ${KANBOARD_API_USERNAME}
+      KANBOARD_API_TOKEN: ${KANBOARD_API_TOKEN}
     volumes:
       - ./data:/app/data
       - .:/workspace/repo
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
+      - kanboard
       - gitea
 
   kanboard:

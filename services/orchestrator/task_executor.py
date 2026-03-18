@@ -14,6 +14,7 @@ from urllib.parse import quote
 
 import httpx
 
+from services.common.kanboard import KanboardSync
 from services.common.store import add_event, mark_task_failed, update_task
 
 
@@ -197,9 +198,15 @@ class ModelClient:
 
 
 class TaskExecutor:
-    def __init__(self, config: ExecutorConfig | None = None, model_client: ModelClient | None = None) -> None:
+    def __init__(
+        self,
+        config: ExecutorConfig | None = None,
+        model_client: ModelClient | None = None,
+        kanboard_sync: KanboardSync | None = None,
+    ) -> None:
         self._config = config or ExecutorConfig.from_env()
         self._model_client = model_client or ModelClient(self._config)
+        self._kanboard_sync = kanboard_sync
 
     def execute(self, task: dict[str, Any]) -> None:
         profile = AREA_PROFILES.get(task["target_area"])
@@ -214,7 +221,7 @@ class TaskExecutor:
             worktree_path, branch_name = self._create_worktree(task["id"])
             repo_link = self._repo_link(branch_name)
             ci_link = self._ci_link()
-            update_task(
+            self._update_task(
                 task["id"],
                 status="coding",
                 branch_name=branch_name,
@@ -229,7 +236,7 @@ class TaskExecutor:
             self._apply_plan(worktree_path, profile, plan)
             add_event(task["id"], "agent", plan.get("summary", "Model generated code changes."))
 
-            update_task(
+            self._update_task(
                 task["id"],
                 status="testing",
                 event_type="testing",
@@ -240,7 +247,7 @@ class TaskExecutor:
             commit_message = plan.get("commit_message") or f"Resolve {task['id']}: {task['title']}"
             commit_sha = self._commit_and_optionally_push(worktree_path, branch_name, commit_message)
 
-            update_task(
+            self._update_task(
                 task["id"],
                 commit_sha=commit_sha,
                 repo_link=repo_link,
@@ -251,7 +258,7 @@ class TaskExecutor:
 
             if self._config.push_enabled:
                 self._wait_for_ci(commit_sha, task["id"])
-            update_task(
+            self._update_task(
                 task["id"],
                 status="done",
                 last_error=None,
@@ -260,6 +267,7 @@ class TaskExecutor:
             )
         except Exception as exc:
             mark_task_failed(task["id"], f"Execution failed: {exc}")
+            self._sync_kanboard_status(task["id"], "failed")
             raise
         finally:
             if worktree_path and worktree_path.exists():
@@ -392,3 +400,24 @@ class TaskExecutor:
                 f"Command failed: {shlex.join(command)}\nSTDOUT:\n{completed.stdout}\nSTDERR:\n{completed.stderr}"
             )
         return completed.stdout.strip()
+
+    def _update_task(
+        self,
+        task_id: str,
+        *,
+        event_type: str | None = None,
+        event_message: str | None = None,
+        **fields: Any,
+    ) -> None:
+        update_task(task_id, event_type=event_type, event_message=event_message, **fields)
+        status = fields.get("status")
+        if status:
+            self._sync_kanboard_status(task_id, status)
+
+    def _sync_kanboard_status(self, task_id: str, status: str) -> None:
+        if not self._kanboard_sync or not self._kanboard_sync.enabled:
+            return
+        try:
+            self._kanboard_sync.sync_task_status(task_id, status)
+        except Exception as exc:
+            add_event(task_id, "kanboard", f"Kanboard status sync failed: {exc}")

@@ -2,50 +2,16 @@
 from __future__ import annotations
 
 import os
-import re
-import time
-from typing import Any
 
-import httpx
-
+from services.common.kanboard import (
+    KanboardClient,
+    list_project_tasks,
+    parse_demo_task_id,
+    sync_task_status,
+    task_index_by_catalog_id,
+    wait_for_server,
+)
 from services.common.task_catalog import BOARD_COLUMNS, DEFAULT_TASKS
-
-
-class KanboardClient:
-    def __init__(self, url: str, username: str, token: str) -> None:
-        self._url = url.rstrip("/")
-        self._client = httpx.Client(auth=(username, token), timeout=httpx.Timeout(20.0))
-        self._request_id = 0
-
-    def close(self) -> None:
-        self._client.close()
-
-    def call(self, method: str, params: Any | None = None) -> Any:
-        self._request_id += 1
-        payload = {
-            "jsonrpc": "2.0",
-            "id": self._request_id,
-            "method": method,
-            "params": params or {},
-        }
-        response = self._client.post(self._url, json=payload)
-        response.raise_for_status()
-        body = response.json()
-        if body.get("error"):
-            raise RuntimeError(f"Kanboard API error for {method}: {body['error']}")
-        return body.get("result")
-
-
-def wait_for_server(client: KanboardClient, attempts: int = 30, sleep_seconds: int = 2) -> None:
-    last_error: Exception | None = None
-    for _ in range(attempts):
-        try:
-            client.call("getAllProjects")
-            return
-        except Exception as exc:  # pragma: no cover - exercised against live Kanboard only
-            last_error = exc
-            time.sleep(sleep_seconds)
-    raise RuntimeError("Kanboard did not become ready in time") from last_error
 
 
 def ensure_project(client: KanboardClient, project_name: str) -> int:
@@ -120,50 +86,6 @@ def kanboard_description(task: dict) -> str:
         f"Контекст:\n{task['summary']}\n\n"
         f"Definition of Done:\n{task['acceptance_criteria']}"
     )
-
-
-def parse_demo_task_id(description: str) -> str | None:
-    match = re.search(r"Demo task id:\s*`([^`]+)`", description or "")
-    return match.group(1) if match else None
-
-
-def list_project_tasks(client: KanboardClient, project_id: int) -> list[dict]:
-    active_tasks = client.call("getAllTasks", {"project_id": project_id, "status_id": 1}) or []
-    inactive_tasks = client.call("getAllTasks", {"project_id": project_id, "status_id": 0}) or []
-    return active_tasks + inactive_tasks
-
-
-def task_index_by_catalog_id(tasks: list[dict]) -> dict[str, dict]:
-    indexed: dict[str, dict] = {}
-    for task in tasks:
-        catalog_id = parse_demo_task_id(task.get("description", ""))
-        if catalog_id:
-            indexed[catalog_id] = task
-    return indexed
-
-
-def sync_task_status(
-    client: KanboardClient,
-    project_id: int,
-    task_id: int,
-    swimlane_id: int,
-    target_column_id: int,
-    should_be_done: bool,
-) -> None:
-    client.call(
-        "moveTaskPosition",
-        {
-            "project_id": project_id,
-            "task_id": task_id,
-            "column_id": target_column_id,
-            "position": 1,
-            "swimlane_id": swimlane_id,
-        },
-    )
-    if should_be_done:
-        client.call("closeTask", {"task_id": task_id})
-    else:
-        client.call("openTask", {"task_id": task_id})
 
 
 def ensure_tasks(client: KanboardClient, project_id: int, owner_id: int, column_ids: dict[str, int]) -> None:
