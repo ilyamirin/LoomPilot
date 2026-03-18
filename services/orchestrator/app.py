@@ -6,14 +6,23 @@ import os
 
 from fastapi import FastAPI
 
-from services.common.store import initialize_store, list_recent_events, list_tasks, progress_ready_tasks
+from services.common.store import claim_next_ready_task, initialize_store, list_recent_events, list_tasks
+from services.orchestrator.task_executor import TaskExecutionError, TaskExecutor
 
 POLL_INTERVAL_SECONDS = int(os.getenv("ORCHESTRATOR_POLL_INTERVAL_SECONDS", "5"))
 
 
 async def orchestration_loop(stop_event: asyncio.Event) -> None:
+    executor = TaskExecutor()
     while not stop_event.is_set():
-        progress_ready_tasks()
+        task = claim_next_ready_task()
+        if task:
+            try:
+                await asyncio.to_thread(executor.execute, task)
+            except TaskExecutionError:
+                pass
+            except Exception:
+                pass
         await asyncio.sleep(POLL_INTERVAL_SECONDS)
 
 
