@@ -149,7 +149,6 @@ def _sync_catalog_metadata(connection: sqlite3.Connection) -> None:
                 kind = ?,
                 status = CASE
                     WHEN tasks.status = 'backlog' AND ? = 'done' THEN 'done'
-                    WHEN tasks.status = 'done' THEN ?
                     ELSE tasks.status
                 END,
                 summary = ?,
@@ -161,7 +160,6 @@ def _sync_catalog_metadata(connection: sqlite3.Connection) -> None:
             (
                 task["title"],
                 task["kind"],
-                task["status"],
                 task["status"],
                 task["summary"],
                 task["acceptance_criteria"],
