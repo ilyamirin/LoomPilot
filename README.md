@@ -33,6 +33,7 @@ progressively rather than hidden behind a large opaque bootstrap.
 - shared SQLite-backed demo task store with seeded backlog and done tasks
 - Kanboard seed script that creates the project, user, columns, and cards
 - minimal `Gitea Actions` workflow for running `pytest`
+- real task executor with `git worktree`, model-driven file edits, commit, push, and CI polling
 
 ## Development
 
@@ -48,10 +49,24 @@ docker compose up --build
 
 - `pet-app`: seller dashboard demo application
 - `control-room`: pipeline status dashboard
-- `orchestrator`: task lifecycle engine
+- `orchestrator`: task lifecycle engine and autonomous executor
 - `kanboard`: task board and user-facing intake
 - `gitea`: repository hosting and PR UI
 - `gitea-actions-runner`: executes Gitea Actions jobs in Docker
+
+## Agent Execution
+
+- the executor watches `Ready` tasks and claims one at a time
+- each task gets its own `git worktree` and branch under `codex/...`
+- the coding agent calls the local OpenAI-compatible model service from `MODEL_BASE_URL`
+- the agent writes full-file replacements for a constrained file set, runs `pytest`, commits, pushes, and waits for `Gitea Actions`
+- branch, commit, and CI links are written back into the control-room store
+
+For isolated local runs without waiting for the compose orchestrator:
+
+```bash
+PYTHONPATH=. .venv/bin/python scripts/run_executor_once.py --task-id BL-001 --force-ready
+```
 
 ## Port Map
 
@@ -70,6 +85,7 @@ docker compose up --build
 - `kanboard-seed` uses JSON-RPC against `http://kanboard/jsonrpc.php`
 - `gitea-actions-runner` registers itself with the static instance token exposed by `Gitea`
 - the runner and action job containers reach the local forge through `http://host.docker.internal:13000`
+- the orchestrator bind-mounts the repo, creates worktrees in `data/worktrees`, and reaches the host model service through `host.docker.internal`
 
 ## Safety
 

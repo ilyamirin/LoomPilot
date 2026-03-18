@@ -80,6 +80,7 @@ Scope:
 - prepare Gitea configuration for local use
 - add Gitea Actions runner configuration and workflow definitions
 - connect orchestrator events to repository workflow artifacts
+- add a real task executor with `git worktree`, model calls, commit, push, and CI polling
 
 Definition of Done:
 
@@ -87,6 +88,9 @@ Definition of Done:
 - Gitea Actions runner is defined and documented
 - repository workflow file exists for CI/CD demo
 - control room can render links for repo and pipeline artifacts
+- at least one backlog task can be executed by the agent into a dedicated branch
+- the agent can call the local `gpt-5.4` compatible model service and write real code changes
+- the agent can push a branch and observe `Gitea Actions` success for the produced commit
 - no secrets are present in version control
 
 ## Stage 6. Demo Narrative Hardening

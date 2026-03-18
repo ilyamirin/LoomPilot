@@ -148,6 +148,7 @@
                 <th>Task</th>
                 <th>Status</th>
                 <th>Area</th>
+                <th>Artifacts</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -161,6 +162,23 @@
                   </td>
                   <td><span class="status">{{ task.status }}</span></td>
                   <td>{{ task.target_area }}</td>
+                  <td>
+                    {% if task.branch_name %}
+                      <div><strong>Branch:</strong> {{ task.branch_name }}</div>
+                    {% endif %}
+                    {% if task.repo_link %}
+                      <div><a href="{{ task.repo_link }}" target="_blank" rel="noreferrer">Branch view</a></div>
+                    {% endif %}
+                    {% if task.ci_link %}
+                      <div><a href="{{ task.ci_link }}" target="_blank" rel="noreferrer">CI</a></div>
+                    {% endif %}
+                    {% if task.commit_sha %}
+                      <div><small>{{ task.commit_sha[:12] }}</small></div>
+                    {% endif %}
+                    {% if task.last_error %}
+                      <div><small style="color: var(--bad)">{{ task.last_error }}</small></div>
+                    {% endif %}
+                  </td>
                   <td>
                     {% if task.status == "backlog" %}
                       <form method="post" action="/tasks/{{ task.id }}/ready">
