@@ -90,6 +90,7 @@ DEFAULT_TASKS = [
         "summary": "Finance totals should subtract refunded orders.",
         "acceptance_criteria": "Net revenue excludes refunded order totals.",
         "target_area": "finance",
+        "execution_risk": "safe",
     },
     {
         "id": "BL-002",
@@ -99,6 +100,7 @@ DEFAULT_TASKS = [
         "summary": "String sorting breaks the recent orders view.",
         "acceptance_criteria": "Newest orders appear first regardless of month/day formatting.",
         "target_area": "orders",
+        "execution_risk": "safe",
     },
     {
         "id": "BL-003",
@@ -108,6 +110,7 @@ DEFAULT_TASKS = [
         "summary": "Category filter affects the table but not summary cards.",
         "acceptance_criteria": "Filtered dashboard cards match filtered dataset.",
         "target_area": "dashboard",
+        "execution_risk": "medium",
     },
     {
         "id": "BL-004",
@@ -117,6 +120,7 @@ DEFAULT_TASKS = [
         "summary": "Show products with critically low stock.",
         "acceptance_criteria": "Dashboard lists products with stock under the threshold.",
         "target_area": "dashboard",
+        "execution_risk": "safe",
     },
     {
         "id": "BL-005",
@@ -126,6 +130,7 @@ DEFAULT_TASKS = [
         "summary": "Operations needs a quick CSV export from the orders page.",
         "acceptance_criteria": "Orders page provides CSV download.",
         "target_area": "orders",
+        "execution_risk": "medium",
     },
     {
         "id": "BL-006",
@@ -135,6 +140,7 @@ DEFAULT_TASKS = [
         "summary": "Negative margin should be visible without opening product details.",
         "acceptance_criteria": "Negative margin rows are clearly highlighted.",
         "target_area": "products",
+        "execution_risk": "safe",
     },
     {
         "id": "BL-007",
@@ -144,6 +150,7 @@ DEFAULT_TASKS = [
         "summary": "Cancelled orders should not increase the return rate denominator.",
         "acceptance_criteria": "Return rate excludes cancelled orders from the base.",
         "target_area": "dashboard",
+        "execution_risk": "medium",
     },
     {
         "id": "BL-008",
@@ -153,6 +160,7 @@ DEFAULT_TASKS = [
         "summary": "Brand filter needs to propagate to top products.",
         "acceptance_criteria": "Top products card changes when a brand is selected.",
         "target_area": "products",
+        "execution_risk": "medium",
     },
     {
         "id": "BL-009",
@@ -162,6 +170,7 @@ DEFAULT_TASKS = [
         "summary": "The demo needs a richer reasons distribution.",
         "acceptance_criteria": "Return reasons chart has at least four categories.",
         "target_area": "data",
+        "execution_risk": "medium",
     },
     {
         "id": "BL-010",
@@ -171,6 +180,7 @@ DEFAULT_TASKS = [
         "summary": "The live app should reveal which task version is deployed.",
         "acceptance_criteria": "UI shows a build badge with task id and timestamp.",
         "target_area": "platform",
+        "execution_risk": "medium",
     },
     {
         "id": "BL-011",
@@ -180,6 +190,7 @@ DEFAULT_TASKS = [
         "summary": "Current empty table is unclear.",
         "acceptance_criteria": "Users see a readable empty state with next actions.",
         "target_area": "orders",
+        "execution_risk": "safe",
     },
     {
         "id": "BL-012",
@@ -189,5 +200,6 @@ DEFAULT_TASKS = [
         "summary": "The demo needs one more smoke test for confidence.",
         "acceptance_criteria": "Test suite covers the dashboard landing page.",
         "target_area": "platform",
+        "execution_risk": "safe",
     },
 ]

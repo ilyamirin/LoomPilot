@@ -61,6 +61,8 @@ docker compose up --build
 - the coding agent calls the local OpenAI-compatible model service from `MODEL_BASE_URL`
 - the agent writes full-file replacements for a constrained file set, runs `pytest`, commits, pushes, and waits for `Gitea Actions`
 - branch, commit, and CI links are written back into the control-room store
+- executor profiles currently cover all backlog areas: `finance`, `orders`, `dashboard`, `products`, `platform`, and `data`
+- backlog tasks are marked with `execution_risk`: `safe`, `medium`, or `review`
 
 For isolated local runs without waiting for the compose orchestrator:
 

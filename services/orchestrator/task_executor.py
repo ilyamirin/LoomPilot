@@ -59,6 +59,23 @@ AREA_PROFILES: dict[str, TaskProfile] = {
         ),
         test_args=("-m", "pytest", "tests/test_pet_app.py"),
     ),
+    "platform": TaskProfile(
+        allowed_files=(
+            "services/pet_app/app.py",
+            "services/pet_app/templates/base.html",
+            "services/pet_app/templates/dashboard.html",
+            "tests/test_pet_app.py",
+        ),
+        test_args=("-m", "pytest", "tests/test_pet_app.py"),
+    ),
+    "data": TaskProfile(
+        allowed_files=(
+            "services/pet_app/domain.py",
+            "services/pet_app/templates/dashboard.html",
+            "tests/test_pet_app.py",
+        ),
+        test_args=("-m", "pytest", "tests/test_pet_app.py"),
+    ),
 }
 
 

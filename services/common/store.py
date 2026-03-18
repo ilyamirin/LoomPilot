@@ -28,6 +28,7 @@ TASK_COLUMNS = {
     "commit_sha": "TEXT",
     "worktree_path": "TEXT",
     "last_error": "TEXT",
+    "execution_risk": "TEXT",
 }
 
 
@@ -84,6 +85,7 @@ def initialize_store() -> None:
             """
         )
         _ensure_task_columns(connection)
+        _sync_catalog_metadata(connection)
         task_count = connection.execute("SELECT COUNT(*) AS count FROM tasks").fetchone()["count"]
         if task_count == 0:
             _seed_tasks(connection)
@@ -105,10 +107,10 @@ def _seed_tasks(connection: sqlite3.Connection) -> None:
             """
             INSERT INTO tasks (
                 id, title, kind, status, summary, acceptance_criteria,
-                target_area, branch_name, repo_link, ci_link, commit_sha,
+                target_area, execution_risk, branch_name, repo_link, ci_link, commit_sha,
                 worktree_path, last_error, created_at, updated_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 task["id"],
@@ -118,6 +120,7 @@ def _seed_tasks(connection: sqlite3.Connection) -> None:
                 task["summary"],
                 task["acceptance_criteria"],
                 task["target_area"],
+                task.get("execution_risk"),
                 None,
                 None,
                 None,
@@ -134,6 +137,18 @@ def _seed_tasks(connection: sqlite3.Connection) -> None:
             "seeded",
             f"Task {task['id']} seeded in status {task['status']}.",
             timestamp,
+        )
+
+
+def _sync_catalog_metadata(connection: sqlite3.Connection) -> None:
+    for task in DEFAULT_TASKS:
+        connection.execute(
+            """
+            UPDATE tasks
+            SET execution_risk = COALESCE(?, execution_risk)
+            WHERE id = ?
+            """,
+            (task.get("execution_risk"), task["id"]),
         )
 
 

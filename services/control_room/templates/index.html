@@ -81,6 +81,26 @@
         font-weight: 700;
         text-transform: uppercase;
       }
+      .risk {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .risk.safe {
+        background: rgba(112, 197, 159, 0.16);
+        color: var(--good);
+      }
+      .risk.medium {
+        background: rgba(240, 163, 76, 0.16);
+        color: var(--accent);
+      }
+      .risk.review {
+        background: rgba(243, 107, 107, 0.16);
+        color: var(--bad);
+      }
       .ready-button {
         border: none;
         border-radius: 999px;
@@ -148,6 +168,7 @@
                 <th>Task</th>
                 <th>Status</th>
                 <th>Area</th>
+                <th>Risk</th>
                 <th>Artifacts</th>
                 <th>Action</th>
               </tr>
@@ -162,6 +183,13 @@
                   </td>
                   <td><span class="status">{{ task.status }}</span></td>
                   <td>{{ task.target_area }}</td>
+                  <td>
+                    {% if task.execution_risk %}
+                      <span class="risk {{ task.execution_risk }}">{{ task.execution_risk }}</span>
+                    {% else %}
+                      <small class="muted">n/a</small>
+                    {% endif %}
+                  </td>
                   <td>
                     {% if task.branch_name %}
                       <div><strong>Branch:</strong> {{ task.branch_name }}</div>
