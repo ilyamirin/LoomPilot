@@ -76,7 +76,7 @@ services:
       GITEA_INSTANCE_URL: http://host.docker.internal:${GITEA_HTTP_PORT:-13000}
       GITEA_RUNNER_REGISTRATION_TOKEN: ${GITEA_RUNNER_REGISTRATION_TOKEN}
       GITEA_RUNNER_NAME: ${GITEA_RUNNER_NAME:-local-docker-runner}
-      GITEA_RUNNER_LABELS: ${GITEA_RUNNER_LABELS:-ubuntu-latest:docker://node:20-bookworm,ubuntu-22.04:docker://node:20-bookworm}
+      GITEA_RUNNER_LABELS: ${GITEA_RUNNER_LABELS:-ubuntu-latest:docker://python:3.12-slim,ubuntu-22.04:docker://python:3.12-slim}
     volumes:
       - ./data/act_runner:/data
       - /var/run/docker.sock:/var/run/docker.sock
