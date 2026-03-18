@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import re
 import time
 from typing import Any
 
@@ -55,7 +56,7 @@ def ensure_project(client: KanboardClient, project_name: str) -> int:
         "createProject",
         {
             "name": project_name,
-            "description": "Autonomous coding demo board for the seller cockpit pet app.",
+            "description": "Доска задач для демо автономного кодинга вокруг приложения Seller Desk.",
         },
     )
     return int(project_id)
@@ -109,11 +110,60 @@ def task_exists(client: KanboardClient, project_id: int, title: str) -> bool:
 def kanboard_description(task: dict) -> str:
     return (
         f"Demo task id: `{task['id']}`\n\n"
-        f"Type: `{task['kind']}`\n"
-        f"Target area: `{task['target_area']}`\n\n"
-        f"{task['summary']}\n\n"
-        f"Acceptance criteria:\n{task['acceptance_criteria']}"
+        f"Тип: `{task['kind']}`\n"
+        f"Зона: `{task['target_area']}`\n"
+        f"Риск автоисполнения: `{task.get('execution_risk') or 'n/a'}`\n\n"
+        f"Оценки:\n"
+        f"- Наглядность: {task['visual_score']}/5\n"
+        f"- Реалистичность: {task['realism_score']}/5\n"
+        f"- Шанс успешного автоисполнения: {task['agent_score']}/5\n\n"
+        f"Контекст:\n{task['summary']}\n\n"
+        f"Definition of Done:\n{task['acceptance_criteria']}"
     )
+
+
+def parse_demo_task_id(description: str) -> str | None:
+    match = re.search(r"Demo task id:\s*`([^`]+)`", description or "")
+    return match.group(1) if match else None
+
+
+def list_project_tasks(client: KanboardClient, project_id: int) -> list[dict]:
+    active_tasks = client.call("getAllTasks", {"project_id": project_id, "status_id": 1}) or []
+    inactive_tasks = client.call("getAllTasks", {"project_id": project_id, "status_id": 0}) or []
+    return active_tasks + inactive_tasks
+
+
+def task_index_by_catalog_id(tasks: list[dict]) -> dict[str, dict]:
+    indexed: dict[str, dict] = {}
+    for task in tasks:
+        catalog_id = parse_demo_task_id(task.get("description", ""))
+        if catalog_id:
+            indexed[catalog_id] = task
+    return indexed
+
+
+def sync_task_status(
+    client: KanboardClient,
+    project_id: int,
+    task_id: int,
+    swimlane_id: int,
+    target_column_id: int,
+    should_be_done: bool,
+) -> None:
+    client.call(
+        "moveTaskPosition",
+        {
+            "project_id": project_id,
+            "task_id": task_id,
+            "column_id": target_column_id,
+            "position": 1,
+            "swimlane_id": swimlane_id,
+        },
+    )
+    if should_be_done:
+        client.call("closeTask", {"task_id": task_id})
+    else:
+        client.call("openTask", {"task_id": task_id})
 
 
 def ensure_tasks(client: KanboardClient, project_id: int, owner_id: int, column_ids: dict[str, int]) -> None:
@@ -128,22 +178,54 @@ def ensure_tasks(client: KanboardClient, project_id: int, owner_id: int, column_
         "failed": "Failed",
     }
 
+    existing_tasks = list_project_tasks(client, project_id)
+    indexed_tasks = task_index_by_catalog_id(existing_tasks)
+
     for task in DEFAULT_TASKS:
+        column_name = status_to_column[task["status"]]
+        target_column_id = column_ids[column_name]
+        existing = indexed_tasks.get(task["id"])
+        if existing:
+            client.call(
+                "updateTask",
+                {
+                    "id": int(existing["id"]),
+                    "title": task["title"],
+                    "owner_id": owner_id,
+                    "description": kanboard_description(task),
+                },
+            )
+            sync_task_status(
+                client,
+                project_id=project_id,
+                task_id=int(existing["id"]),
+                swimlane_id=int(existing.get("swimlane_id") or 1),
+                target_column_id=target_column_id,
+                should_be_done=task["status"] == "done",
+            )
+            continue
+
         if task_exists(client, project_id, task["title"]):
             continue
-        column_name = status_to_column[task["status"]]
-        task_id = client.call(
+
+        created_task_id = client.call(
             "createTask",
             {
                 "title": task["title"],
                 "project_id": project_id,
-                "column_id": column_ids[column_name],
+                "column_id": target_column_id,
                 "owner_id": owner_id,
                 "description": kanboard_description(task),
             },
         )
-        if task["status"] == "done":
-            client.call("closeTask", {"task_id": task_id})
+        sync_task_status(
+            client,
+            project_id=project_id,
+            task_id=int(created_task_id),
+            swimlane_id=1,
+            target_column_id=target_column_id,
+            should_be_done=task["status"] == "done",
+        )
 
 
 def main() -> None:

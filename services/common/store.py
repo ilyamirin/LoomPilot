@@ -145,10 +145,30 @@ def _sync_catalog_metadata(connection: sqlite3.Connection) -> None:
         connection.execute(
             """
             UPDATE tasks
-            SET execution_risk = COALESCE(?, execution_risk)
+            SET title = ?,
+                kind = ?,
+                status = CASE
+                    WHEN tasks.status = 'backlog' AND ? = 'done' THEN 'done'
+                    WHEN tasks.status = 'done' THEN ?
+                    ELSE tasks.status
+                END,
+                summary = ?,
+                acceptance_criteria = ?,
+                target_area = ?,
+                execution_risk = ?
             WHERE id = ?
             """,
-            (task.get("execution_risk"), task["id"]),
+            (
+                task["title"],
+                task["kind"],
+                task["status"],
+                task["status"],
+                task["summary"],
+                task["acceptance_criteria"],
+                task["target_area"],
+                task.get("execution_risk"),
+                task["id"],
+            ),
         )
 
 
