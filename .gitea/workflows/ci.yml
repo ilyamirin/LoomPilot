@@ -18,11 +18,19 @@ jobs:
       - name: Show Python version
         run: python3 --version
 
-      - name: Install pip
-        run: apt-get update && apt-get install -y python3-pip
+      - name: Install Python tooling
+        run: apt-get update && apt-get install -y python3-pip python3-venv
+
+      - name: Create CI virtual environment
+        run: python3 -m venv .venv-ci
 
       - name: Install dependencies
-        run: python3 -m pip install ".[dev]"
+        run: |
+          . .venv-ci/bin/activate
+          pip install --upgrade pip
+          pip install ".[dev]"
 
       - name: Run test suite
-        run: PYTHONPATH=. python3 -m pytest
+        run: |
+          . .venv-ci/bin/activate
+          PYTHONPATH=. python -m pytest
