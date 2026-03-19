@@ -84,7 +84,7 @@ a {
 }
 
 .gcg-header-shell {
-    max-width: var(--gcg-max);
+    max-width: min(100%, calc(var(--gcg-max) + 220px));
     margin: 18px auto 0;
     padding: 0 var(--gcg-gutter);
     background: transparent;
@@ -94,14 +94,24 @@ a {
 
 .gcg-header-inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.8fr);
-    gap: 21px 34px;
-    align-items: start;
-    padding: 8px 0 0;
+    gap: 10px;
+    width: 100%;
+    padding: 6px 0 0;
+    box-sizing: border-box;
 }
 
 .gcg-header-copy {
     min-width: 0;
+    display: grid;
+    gap: 12px;
+    flex: 1 1 auto;
+}
+
+.gcg-header-top {
+    display: flex;
+    width: 100%;
+    gap: 24px;
+    align-items: flex-start;
 }
 
 .gcg-header-copy .title-container h1,
@@ -111,77 +121,60 @@ a {
     margin: 0;
     color: var(--gcg-ink);
     font-family: var(--gcg-serif);
-    font-size: clamp(1.8rem, 1.4rem + 1.2vw, 3rem);
+    font-size: clamp(1.48rem, 1.22rem + 0.72vw, 2.16rem);
     font-weight: 600;
-    line-height: 1.02;
-    letter-spacing: -0.04em;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
 }
 
 .gcg-page-title {
-    display: flex;
-    align-items: flex-start;
-    gap: 13px;
+    display: block;
+    max-width: none;
+    white-space: nowrap;
 }
 
 .gcg-page-title .title {
     min-width: 0;
+    white-space: nowrap;
 }
 
-.gcg-title-mark {
-    flex: 0 0 auto;
-}
-
-.gcg-title-mark a {
-    display: inline-flex;
+.gcg-header-support {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px;
     align-items: center;
-    justify-content: center;
-    min-width: 3rem;
-    padding: 0.5rem 0.96rem;
-    border: 1px solid var(--gcg-line);
-    border-radius: 999px;
-    background: rgba(29, 24, 32, 0.62);
-    color: var(--gcg-muted) !important;
-    font-family: var(--gcg-mono) !important;
-    font-size: 0.96rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.16em !important;
-    line-height: 1 !important;
-    text-decoration: none;
-    text-transform: uppercase;
-    box-shadow: 0 8px 22px rgba(7, 6, 10, 0.18);
-}
-
-.gcg-title-mark a:hover {
-    color: var(--gcg-ink-soft) !important;
-    border-color: var(--gcg-line-strong);
+    min-width: 0;
 }
 
 .gcg-header-description {
-    max-width: 40rem;
-    margin: 13px 0 0;
+    max-width: none;
+    margin: 0;
     color: var(--gcg-muted);
     font-family: var(--gcg-mono);
-    font-size: 0.98rem;
-    line-height: 1.7;
+    font-size: 0.88rem;
+    line-height: 1.56;
 }
 
 .gcg-header-meta {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 13px;
+    gap: 8px;
+    margin-top: 0;
     padding: 8px 12px;
     border: 1px solid var(--gcg-line);
     border-radius: 999px;
     background: rgba(29, 24, 32, 0.62);
     box-shadow: 0 10px 26px rgba(7, 6, 10, 0.18);
+    white-space: nowrap;
+    justify-self: start;
+    width: fit-content;
 }
 
 .gcg-header-meta-label,
 .gcg-header-meta-value {
     font-family: var(--gcg-mono);
-    font-size: 0.84rem;
-    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
@@ -198,17 +191,18 @@ a {
     display: grid;
     gap: 13px;
     align-self: start;
-    justify-self: end;
     justify-items: end;
     width: fit-content;
-    margin-top: 13px;
+    margin-top: 4px;
+    margin-left: auto;
+    flex: 0 0 auto;
 }
 
 .gcg-header-tools .board-selector-container,
 .gcg-header-tools .menus-container {
     width: auto;
     max-width: min(100%, 32rem);
-    padding: 13px 18px;
+    padding: 14px 20px;
     border: 1px solid var(--gcg-line);
     border-radius: calc(var(--gcg-radius) - 4px);
     background: var(--gcg-panel);
@@ -220,7 +214,7 @@ a {
     flex-wrap: nowrap;
     align-items: center;
     justify-content: flex-end;
-    gap: 13px;
+    gap: 16px;
     width: auto;
     min-width: 0;
     white-space: nowrap;
@@ -1437,13 +1431,31 @@ label {
 }
 
 @media (max-width: 1160px) {
-    .gcg-header-inner,
     .gcg-login-grid {
         grid-template-columns: 1fr;
     }
 
+    .gcg-header-top {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .gcg-header-support {
+        grid-template-columns: 1fr;
+        justify-items: start;
+    }
+
     .gcg-header-tools {
         justify-items: stretch;
+        align-self: start;
+        margin-top: 0;
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .gcg-page-title,
+    .gcg-page-title .title {
+        white-space: normal;
     }
 
     .gcg-header-tools .board-selector-container,

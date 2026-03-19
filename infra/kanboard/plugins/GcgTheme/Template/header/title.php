@@ -1,7 +1,4 @@
 <h1 class="gcg-page-title">
-    <span class="logo gcg-title-mark">
-        <?= $this->url->link('KB', 'DashboardController', 'show', array(), false, '', t('Dashboard')) ?>
-    </span>
     <span class="title">
         <?php if (! empty($project) && ! empty($task)): ?>
             <?= $this->url->link($this->text->e($project['name']), 'BoardViewController', 'show', array('project_id' => $project['id'])) ?>
