@@ -19,7 +19,8 @@
     --gcg-max: 1480px;
     --gcg-gutter: clamp(22px, 2.6vw, 52px);
     --gcg-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-    --gcg-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --gcg-mono: "Geist Mono", "IBM Plex Mono", "JetBrains Mono", "Azeret Mono", "SFMono-Regular", "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
+    --gcg-sans: var(--gcg-mono);
 }
 
 html,
@@ -46,7 +47,8 @@ a {
     margin: 0;
     color: var(--gcg-muted);
     font-size: 0.72rem;
-    font-weight: 700;
+    font-family: var(--gcg-mono);
+    font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
 }
@@ -75,6 +77,7 @@ a {
 
 .gcg-topbar-copy {
     color: var(--gcg-muted);
+    font-family: var(--gcg-mono);
     font-size: 0.92rem;
     text-align: right;
 }
@@ -113,6 +116,7 @@ a {
     max-width: 40rem;
     margin: 13px 0 0;
     color: var(--gcg-muted);
+    font-family: var(--gcg-mono);
     font-size: 1rem;
     line-height: 1.65;
 }
@@ -201,16 +205,18 @@ section.page {
 .board-column-title a,
 .board-column-title .dropdown-menu {
     color: var(--gcg-ink);
-    font-family: var(--gcg-serif);
-    font-size: 1.02rem;
+    font-family: var(--gcg-mono);
+    font-size: 0.98rem;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     text-decoration: none;
 }
 
 .board-column-header-task-count,
 .board-swimlane-header .board-column-header-task-count {
     color: var(--gcg-muted);
+    font-family: var(--gcg-mono);
     font-size: 0.88rem;
 }
 
@@ -422,6 +428,7 @@ section.page {
 
 #task-summary h2 {
     color: var(--gcg-muted);
+    font-family: var(--gcg-serif);
 }
 
 .task-summary-container {
@@ -448,6 +455,7 @@ section.page {
 .task-summary-column a,
 .task-summary-column a:hover {
     color: var(--gcg-ink-soft);
+    font-family: var(--gcg-mono);
 }
 
 .task-summary-column strong {
@@ -484,9 +492,11 @@ section.page {
 
 .task-board-title a {
     color: var(--gcg-ink);
+    font-family: var(--gcg-mono);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.45;
+    letter-spacing: 0.01em;
     text-decoration: none;
 }
 
@@ -498,6 +508,7 @@ section.page {
     padding-top: 0;
     padding-bottom: 16px;
     color: var(--gcg-muted);
+    font-family: var(--gcg-mono);
     font-size: 0.84rem;
 }
 
@@ -516,9 +527,10 @@ section.page {
 .task-tag {
     border-radius: 999px;
     padding: 0.2rem 0.55rem;
+    font-family: var(--gcg-mono);
     font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
@@ -561,7 +573,7 @@ button,
 input,
 select,
 textarea {
-    font-family: var(--gcg-sans);
+    font-family: var(--gcg-mono);
 }
 
 .btn {
@@ -675,12 +687,14 @@ textarea {
 .gcg-login-card-header p,
 .gcg-login-footnote {
     color: var(--gcg-muted);
+    font-family: var(--gcg-mono);
 }
 
 .gcg-login-card label {
     margin-top: 13px;
     font-size: 0.88rem;
-    font-weight: 700;
+    font-family: var(--gcg-mono);
+    font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
@@ -726,6 +740,7 @@ textarea {
     background: rgba(71, 38, 53, 0.78);
     border-color: rgba(186, 97, 113, 0.42);
     color: var(--gcg-ink-soft);
+    font-family: var(--gcg-mono);
 }
 
 .alert a {
@@ -744,6 +759,35 @@ textarea {
     color: var(--gcg-ink);
     background-color: rgba(19, 16, 23, 0.92);
     border-color: var(--gcg-line-strong);
+}
+
+.views,
+.views a,
+.views li,
+.sidebar,
+.sidebar a,
+.dropdown ul,
+.dropdown li,
+.table-list,
+.table-list-title,
+.table-list-details,
+.panel,
+.comment,
+.comment-title,
+.comment-content,
+.subtasks-table,
+.task-links-table,
+.task-board-header,
+.task-board-assignee,
+.task-board-icons,
+.task-date,
+.task-board-reference,
+.task-score,
+.board-swimlane-header,
+.board-column-header,
+.task-summary-column li,
+label {
+    font-family: var(--gcg-mono);
 }
 
 ::placeholder {
