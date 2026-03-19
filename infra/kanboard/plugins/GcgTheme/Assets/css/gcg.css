@@ -93,10 +93,14 @@ a {
 
 .gcg-header-inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.618fr) minmax(340px, 1fr);
+    grid-template-columns: minmax(0, 1.618fr) auto;
     gap: 34px;
-    align-items: end;
+    align-items: start;
     padding: 8px 0 0;
+}
+
+.gcg-header-copy {
+    min-width: 0;
 }
 
 .gcg-header-copy .title-container h1,
@@ -153,12 +157,17 @@ a {
 .gcg-header-tools {
     display: grid;
     gap: 13px;
+    align-self: start;
+    justify-self: end;
     justify-items: end;
+    width: fit-content;
+    margin-top: 6px;
 }
 
 .gcg-header-tools .board-selector-container,
 .gcg-header-tools .menus-container {
-    width: min(100%, 32rem);
+    width: auto;
+    max-width: min(100%, 32rem);
     padding: 13px 18px;
     border: 1px solid var(--gcg-line);
     border-radius: calc(var(--gcg-radius) - 4px);
