@@ -1,9 +1,17 @@
-<?php $_title = $this->render('header/title', array(
+<?php
+$clean_description = '';
+
+if (! empty($description)) {
+    $clean_description = trim(preg_replace('/\s+/', ' ', strip_tags($description)));
+}
+
+$_title = $this->render('header/title', array(
     'project' => isset($project) ? $project : null,
     'task' => isset($task) ? $task : null,
-    'description' => isset($description) ? $description : null,
+    'description' => null,
     'title' => $title,
-)) ?>
+));
+?>
 
 <?php $_top_right_corner = implode('&nbsp;', array(
     $this->render('header/user_notifications'),
@@ -18,8 +26,8 @@
             <div class="title-container">
                 <?= $_title ?>
             </div>
-            <?php if (! empty($description)): ?>
-                <p class="gcg-header-description"><?= $this->text->e($description) ?></p>
+            <?php if ($clean_description !== ''): ?>
+                <p class="gcg-header-description"><?= $this->text->e($clean_description) ?></p>
             <?php endif ?>
         </div>
 
