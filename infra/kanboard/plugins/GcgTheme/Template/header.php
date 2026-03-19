@@ -30,11 +30,11 @@ $_title = $this->render('header/title', array(
 ));
 ?>
 
-<?php $_top_right_corner = implode('&nbsp;', array(
-    $this->render('header/user_notifications'),
-    $this->render('header/creation_dropdown'),
-    $this->render('header/user_dropdown')
-)) ?>
+<?php
+$user_notifications = trim($this->render('header/user_notifications'));
+$creation_dropdown = trim($this->render('header/creation_dropdown'));
+$user_dropdown = trim($this->render('header/user_dropdown'));
+?>
 
 <header class="gcg-header-shell">
     <div class="gcg-header-inner">
@@ -61,7 +61,21 @@ $_title = $this->render('header/title', array(
                 </div>
             <?php endif ?>
             <div class="menus-container">
-                <?= $_top_right_corner ?>
+                <?php if ($user_notifications !== ''): ?>
+                    <div class="gcg-menu-slot gcg-menu-slot-notifications">
+                        <?= $user_notifications ?>
+                    </div>
+                <?php endif ?>
+                <?php if ($creation_dropdown !== ''): ?>
+                    <div class="gcg-menu-slot gcg-menu-slot-create">
+                        <?= $creation_dropdown ?>
+                    </div>
+                <?php endif ?>
+                <?php if ($user_dropdown !== ''): ?>
+                    <div class="gcg-menu-slot gcg-menu-slot-user">
+                        <?= $user_dropdown ?>
+                    </div>
+                <?php endif ?>
             </div>
         </div>
     </div>
