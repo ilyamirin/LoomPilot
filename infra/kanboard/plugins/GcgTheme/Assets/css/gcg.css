@@ -241,6 +241,185 @@ section.page {
     box-shadow: 0 0 0 1px rgba(157, 122, 168, 0.12), 0 18px 36px rgba(7, 6, 10, 0.34);
 }
 
+.task-board[class*="color-"] {
+    background:
+        linear-gradient(180deg, var(--gcg-card-glow, rgba(255, 255, 255, 0.05)), transparent 42%),
+        linear-gradient(180deg, var(--gcg-card-bg-top, #312736), var(--gcg-card-bg-bottom, #231d27));
+    border-color: var(--gcg-card-edge, rgba(157, 122, 168, 0.3));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 14px 30px rgba(7, 6, 10, 0.3);
+}
+
+.task-board[class*="color-"]:hover {
+    border-color: var(--gcg-card-edge-strong, rgba(157, 122, 168, 0.5));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 18px 34px rgba(7, 6, 10, 0.38);
+}
+
+.task-board[class*="color-"] .task-board-title a,
+.task-board[class*="color-"] .task-board-header,
+.task-board[class*="color-"] .task-board-header a,
+.task-board[class*="color-"] .task-board-icons,
+.task-board[class*="color-"] .task-board-icons a,
+.task-board[class*="color-"] .task-board-assignee,
+.task-board[class*="color-"] .task-board-reference,
+.task-board[class*="color-"] .task-score,
+.task-board[class*="color-"] .task-time-estimated,
+.task-board[class*="color-"] .task-date,
+.task-board[class*="color-"] .task-icon-age,
+.task-board[class*="color-"] .task-board-closed,
+.task-board[class*="color-"] .dropdown-menu,
+.task-board[class*="color-"] strong {
+    color: var(--gcg-ink-soft);
+}
+
+.task-board[class*="color-"] .task-board-title a {
+    color: var(--gcg-ink);
+}
+
+.task-board[class*="color-"] .task-board-title a:hover {
+    color: #fff7ff;
+}
+
+.task-board[class*="color-"] .task-board-category,
+.task-board[class*="color-"] .task-tag,
+.task-board[class*="color-"] .task-icon-age-total,
+.task-board[class*="color-"] .task-icon-age-column {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--gcg-ink-soft);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.task-board.color-yellow {
+    --gcg-card-bg-top: #4c4032;
+    --gcg-card-bg-bottom: #32281f;
+    --gcg-card-edge: rgba(214, 174, 108, 0.38);
+    --gcg-card-edge-strong: rgba(214, 174, 108, 0.58);
+    --gcg-card-glow: rgba(240, 214, 148, 0.13);
+}
+
+.task-board.color-blue {
+    --gcg-card-bg-top: #283447;
+    --gcg-card-bg-bottom: #1c2434;
+    --gcg-card-edge: rgba(116, 153, 214, 0.34);
+    --gcg-card-edge-strong: rgba(116, 153, 214, 0.56);
+    --gcg-card-glow: rgba(131, 173, 235, 0.12);
+}
+
+.task-board.color-green {
+    --gcg-card-bg-top: #27392f;
+    --gcg-card-bg-bottom: #1b2720;
+    --gcg-card-edge: rgba(108, 172, 125, 0.34);
+    --gcg-card-edge-strong: rgba(108, 172, 125, 0.56);
+    --gcg-card-glow: rgba(130, 203, 150, 0.1);
+}
+
+.task-board.color-purple {
+    --gcg-card-bg-top: #3a2d45;
+    --gcg-card-bg-bottom: #271f30;
+    --gcg-card-edge: rgba(179, 135, 199, 0.42);
+    --gcg-card-edge-strong: rgba(179, 135, 199, 0.64);
+    --gcg-card-glow: rgba(192, 150, 214, 0.12);
+}
+
+.task-board.color-red {
+    --gcg-card-bg-top: #452732;
+    --gcg-card-bg-bottom: #2f1b23;
+    --gcg-card-edge: rgba(192, 99, 121, 0.38);
+    --gcg-card-edge-strong: rgba(192, 99, 121, 0.6);
+    --gcg-card-glow: rgba(209, 118, 140, 0.11);
+}
+
+.task-board.color-orange {
+    --gcg-card-bg-top: #51352d;
+    --gcg-card-bg-bottom: #36231e;
+    --gcg-card-edge: rgba(214, 140, 103, 0.38);
+    --gcg-card-edge-strong: rgba(214, 140, 103, 0.6);
+    --gcg-card-glow: rgba(231, 166, 118, 0.12);
+}
+
+.task-board.color-grey {
+    --gcg-card-bg-top: #33303a;
+    --gcg-card-bg-bottom: #232029;
+    --gcg-card-edge: rgba(159, 152, 170, 0.28);
+    --gcg-card-edge-strong: rgba(159, 152, 170, 0.46);
+    --gcg-card-glow: rgba(220, 214, 232, 0.07);
+}
+
+.task-board.color-brown {
+    --gcg-card-bg-top: #43302b;
+    --gcg-card-bg-bottom: #2d201d;
+    --gcg-card-edge: rgba(170, 122, 103, 0.34);
+    --gcg-card-edge-strong: rgba(170, 122, 103, 0.54);
+    --gcg-card-glow: rgba(198, 149, 126, 0.1);
+}
+
+.task-board.color-deep_orange {
+    --gcg-card-bg-top: #552e26;
+    --gcg-card-bg-bottom: #381d18;
+    --gcg-card-edge: rgba(205, 117, 87, 0.4);
+    --gcg-card-edge-strong: rgba(205, 117, 87, 0.62);
+    --gcg-card-glow: rgba(224, 143, 111, 0.12);
+}
+
+.task-board.color-dark_grey {
+    --gcg-card-bg-top: #2b2b35;
+    --gcg-card-bg-bottom: #1c1c24;
+    --gcg-card-edge: rgba(126, 130, 152, 0.32);
+    --gcg-card-edge-strong: rgba(126, 130, 152, 0.52);
+    --gcg-card-glow: rgba(167, 171, 196, 0.09);
+}
+
+.task-board.color-pink {
+    --gcg-card-bg-top: #4a263b;
+    --gcg-card-bg-bottom: #311927;
+    --gcg-card-edge: rgba(198, 109, 154, 0.4);
+    --gcg-card-edge-strong: rgba(198, 109, 154, 0.62);
+    --gcg-card-glow: rgba(226, 133, 181, 0.11);
+}
+
+.task-board.color-teal {
+    --gcg-card-bg-top: #203a3b;
+    --gcg-card-bg-bottom: #152729;
+    --gcg-card-edge: rgba(99, 176, 170, 0.36);
+    --gcg-card-edge-strong: rgba(99, 176, 170, 0.58);
+    --gcg-card-glow: rgba(123, 204, 197, 0.11);
+}
+
+.task-board.color-cyan {
+    --gcg-card-bg-top: #213742;
+    --gcg-card-bg-bottom: #172630;
+    --gcg-card-edge: rgba(107, 176, 198, 0.36);
+    --gcg-card-edge-strong: rgba(107, 176, 198, 0.58);
+    --gcg-card-glow: rgba(134, 206, 229, 0.11);
+}
+
+.task-board.color-lime {
+    --gcg-card-bg-top: #40412a;
+    --gcg-card-bg-bottom: #2a2c1b;
+    --gcg-card-edge: rgba(176, 188, 105, 0.36);
+    --gcg-card-edge-strong: rgba(176, 188, 105, 0.58);
+    --gcg-card-glow: rgba(202, 214, 131, 0.11);
+}
+
+.task-board.color-light_green {
+    --gcg-card-bg-top: #313f2d;
+    --gcg-card-bg-bottom: #212b1f;
+    --gcg-card-edge: rgba(138, 176, 118, 0.34);
+    --gcg-card-edge-strong: rgba(138, 176, 118, 0.56);
+    --gcg-card-glow: rgba(167, 203, 146, 0.11);
+}
+
+.task-board.color-amber {
+    --gcg-card-bg-top: #4f3924;
+    --gcg-card-bg-bottom: #352516;
+    --gcg-card-edge: rgba(215, 168, 86, 0.38);
+    --gcg-card-edge-strong: rgba(215, 168, 86, 0.6);
+    --gcg-card-glow: rgba(236, 192, 111, 0.12);
+}
+
 .task-board-header,
 .task-board-title,
 .task-board-icons,
