@@ -1,11 +1,21 @@
 <?php
 $clean_description = '';
 $board_selector_html = '';
+$project_owner = '';
 
 if (! empty($description)) {
     $decoded_description = html_entity_decode($description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    $clean_description = trim(preg_replace('/\s+/', ' ', strip_tags($decoded_description)));
-    $clean_description = trim(preg_replace('/^Project owner:\s*\S+\s*/i', '', $clean_description));
+
+    if (preg_match('/Project owner:\s*<strong>(.*?)<\/strong>/i', $decoded_description, $matches)) {
+        $project_owner = trim(preg_replace('/\s+/', ' ', strip_tags($matches[1])));
+    }
+
+    if (preg_match('/<p>(.*?)<\/p>/is', $decoded_description, $matches)) {
+        $clean_description = trim(preg_replace('/\s+/', ' ', strip_tags($matches[1])));
+    } else {
+        $clean_description = trim(preg_replace('/\s+/', ' ', strip_tags($decoded_description)));
+        $clean_description = trim(preg_replace('/^Project owner:\s*\S+\s*/i', '', $clean_description));
+    }
 }
 
 if (! empty($board_selector)) {
@@ -33,12 +43,18 @@ $_title = $this->render('header/title', array(
             <div class="title-container">
                 <?= $_title ?>
             </div>
+            <?php if ($project_owner !== ''): ?>
+                <div class="gcg-header-meta">
+                    <span class="gcg-header-meta-label">Project owner</span>
+                    <span class="gcg-header-meta-value"><?= $this->text->e($project_owner) ?></span>
+                </div>
+            <?php endif ?>
             <?php if ($clean_description !== ''): ?>
                 <p class="gcg-header-description"><?= $this->text->e($clean_description) ?></p>
             <?php endif ?>
         </div>
 
-        <div class="gcg-header-tools">
+        <div class="gcg-header-tools<?= $board_selector_html === '' ? ' gcg-header-tools-compact' : '' ?>">
             <?php if ($board_selector_html !== '' && trim(strip_tags(html_entity_decode($board_selector_html, ENT_QUOTES | ENT_HTML5, 'UTF-8'))) !== ''): ?>
                 <div class="board-selector-container">
                     <?= $board_selector_html ?>
