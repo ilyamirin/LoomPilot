@@ -12,12 +12,12 @@ class Plugin extends Base
             'template' => 'plugins/GcgTheme/Assets/css/gcg.css',
         ));
 
-        $this->hook->on('template:layout:top', array(
-            'template' => 'GcgTheme:layout/top',
-        ));
-
         $this->template->setTemplateOverride('auth/index', 'GcgTheme:auth/index');
         $this->template->setTemplateOverride('header', 'GcgTheme:header');
+        $this->template->setTemplateOverride('header/title', 'GcgTheme:header/title');
+        $this->template->setTemplateOverride('project_header/header', 'GcgTheme:project_header/header');
+        $this->template->setTemplateOverride('board/table_column', 'GcgTheme:board/table_column');
+        $this->template->setTemplateOverride('board/table_tasks', 'GcgTheme:board/table_tasks');
     }
 
     public function getPluginName()
