@@ -1,8 +1,15 @@
 <?php
 $clean_description = '';
+$board_selector_html = '';
 
 if (! empty($description)) {
-    $clean_description = trim(preg_replace('/\s+/', ' ', strip_tags($description)));
+    $decoded_description = html_entity_decode($description, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $clean_description = trim(preg_replace('/\s+/', ' ', strip_tags($decoded_description)));
+    $clean_description = trim(preg_replace('/^Project owner:\s*\S+\s*/i', '', $clean_description));
+}
+
+if (! empty($board_selector)) {
+    $board_selector_html = trim($this->render('header/board_selector', array('board_selector' => $board_selector)));
 }
 
 $_title = $this->render('header/title', array(
@@ -32,11 +39,11 @@ $_title = $this->render('header/title', array(
         </div>
 
         <div class="gcg-header-tools">
-            <div class="board-selector-container">
-                <?php if (! empty($board_selector)): ?>
-                    <?= $this->render('header/board_selector', array('board_selector' => $board_selector)) ?>
-                <?php endif ?>
-            </div>
+            <?php if ($board_selector_html !== '' && trim(strip_tags(html_entity_decode($board_selector_html, ENT_QUOTES | ENT_HTML5, 'UTF-8'))) !== ''): ?>
+                <div class="board-selector-container">
+                    <?= $board_selector_html ?>
+                </div>
+            <?php endif ?>
             <div class="menus-container">
                 <?= $_top_right_corner ?>
             </div>
